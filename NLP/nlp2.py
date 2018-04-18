@@ -28,7 +28,6 @@ print(words)
 useful_words = [word for word in words if word not in stopwords.words('english')]
 print(useful_words)
 
-from nltk.corpus import movie_reviews
 movie_reviews.words()
 movie_reviews.categories()
 movie_reviews.fileids()[:4]
