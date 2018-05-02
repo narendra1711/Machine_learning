@@ -58,7 +58,8 @@ for i in range(0,len(corpus)):
         words.append(corpus[i][j])
         
 text=str(words).replace("'","")
-wordcloud = WordCloud(max_font_size=50).generate(text)
+#wordcloud = WordCloud(max_font_size=50).generate(text)
+wordcloud = WordCloud(max_font_size=50,background_color='black').generate(text).to_file("Sentiment.png")
 plt.figure(figsize=(6,3))
 # plot wordcloud in matplotlib
 plt.imshow(wordcloud, interpolation="bilinear")
