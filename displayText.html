@@ -1,0 +1,18 @@
+<html>
+    <body>
+        <form method = "post">
+            <div id="sb-search" class="sb-search">
+
+                <table>
+                    {% for i in range(0,lenparam) %}
+
+            <tr>
+               <td align="left"> {{ name[i] }} </td>
+            </tr>
+
+         {% endfor %}
+      </table>
+            </div>
+        </form>
+    </body>
+</html>
