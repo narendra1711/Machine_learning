@@ -29,8 +29,8 @@ def search():
 @app.route('/search',methods=['POST'])
 def my_form():
     text=request.form['search']
-    processed_text=text.lower()
-    search_patterns=searchStringInFile(processed_text,file_name)
+    processed_text=text
+    search_patterns=searchStringInDIR(processed_text,dir_name)
     #print(search_patterns)
     return search_patterns
 
@@ -47,23 +47,21 @@ def searchStringInFile(str, file_name):
             search_patterns.append(line)
             user=user+line+"\n"
     #print(user)
-    return render_template('displayText.html', name=search_patterns, lenparam=len(search_patterns))
+    return search_patterns
 
-
-#searchPatterns = searchStringInFile(str, file_name)
-
-
-'''def process_docs(directory):
+def searchStringInDIR(str,directory):
     searchPatternsInDIR = list()
     # walk through all files in the folder
     for filename in listdir(directory):
         # create the full path of the file to open
         file_path = directory + '/' + filename
         searchPatternsInDIR.append({"File_Name": file_path,
-                                    "Value": searchStringInFile(search_str, file_path)})
-
-    return searchPatternsInDIR'''
-
-
+                                    "File_Text": searchStringInFile(str, file_path)})
+        print(searchStringInFile(str, file_path))
+    return render_template('displayText.html', name=searchPatternsInDIR, lenparam=len(searchPatternsInDIR))
+    #return print(searchStringInFile(str, file_path))
 #searchPatternsInDIR = process_docs(dir_name)
 
+
+
+#searchPatterns = searchStringInFile(str, file_name)
