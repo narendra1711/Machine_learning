@@ -1,0 +1,73 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 15 09:07:52 2018
+
+@author: Sandeep_Kosanam
+"""
+
+subscription_key = "7e5a0811df01427aac81c393befaa860"
+assert subscription_key
+vision_base_url = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/"
+vision_analyze_url = vision_base_url + "analyze"
+#image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Atomist_quote_from_Democritus.png/338px-Atomist_quote_from_Democritus.png"
+
+import requests
+import urllib3
+from PIL import Image
+from io import BytesIO
+import matplotlib.pyplot as plt
+
+image_path=r"D:\Project\pic.jpg"
+image_data = open(image_path, "rb").read()
+
+ocr_url = vision_base_url + "ocr"
+print(ocr_url)
+
+headers  = {'Ocp-Apim-Subscription-Key': subscription_key,"Content-Type": "application/octet-stream" }
+params   = {'language': 'unk', 'detectOrientation ': 'true','visualFeatures': 'Categories,Description,Color'}
+#data     = {'url': image_url}
+response = requests.post(ocr_url, headers=headers, params=params, data=image_data, verify=False)
+response.raise_for_status()
+
+analysis = response.json()
+
+line_infos = [region["lines"] for region in analysis["regions"]]
+word_infos = []
+for line in line_infos:
+    for word_metadata in line:
+        for word_info in word_metadata["words"]:
+            word_infos.append(word_info)
+word_infos
+
+plt.figure(figsize=(5,5))
+
+import requests
+import urllib3
+from PIL import Image
+from io import BytesIO
+import matplotlib.pyplot as plt
+import cv2
+
+#Reading an image
+image=cv2.imread("pic.jpg")
+
+#Function to draw a rectangle
+
+def drawRectangle(text,location):
+    w1=int(tuple(location.split(","))[0])
+    h1=int(tuple(location.split(","))[1])
+    w2=int(tuple(location.split(","))[2])
+    h2=int(tuple(location.split(","))[3])
+    point1, point2 = (w1,h1),(w2+w1, h2+h1)
+    cv2.rectangle(image, point1, point2, (0,0,255),1)
+    return
+
+for i in range(0,len(word_infos)):
+    drawRectangle(word_infos[i]['text'],word_infos[i]['boundingBox'])
+
+cv2.imshow('Detected',image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+#print (int(word_infos[1]['boundingBox']))
+
+    
