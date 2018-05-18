@@ -1,84 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 18 20:46:27 2018
-http://pythonforengineers.com/create-a-word-counter-in-python/
-@author: narendra
-"""
+# -*- coding: utf-8 -*-"""Created on Wed May 16 12:20:14 2018
+@author: Narendra_Mugada"""
+import requestsimport urllib3from PIL import Imagefrom io import BytesIOimport matplotlib.pyplot as pltimport cv2import pandas as pd#Reading an imageimage=cv2.imread("pic.jpg")
+#Input values in a dicttext_loc=[]text_loc.append({"text":"Ordering","boundingBox":"45,157,85,167"})text_loc.append({"text":"address","boundingBox":"89,157,126,167"})text_loc.append({"text":"Metsa","boundingBox":"45,175,80,185"})text_loc.append({"text":"Wood","boundingBox":"84,175,118,185"})text_loc.append({"text":"Kerto","boundingBox":"123,175,154,185"})text_loc.append({"text":"Punkaharaju","boundingBox":"159,175,225,185"})text_loc.append({"text":"Box","boundingBox":"75,191,97,201"})text_loc.append({"text":"4607","boundingBox":"101,191,130,201"})text_loc.append({"text":"02020","boundingBox":"44,206,80,216"})text_loc.append({"text":"Metsal","boundingBox":"85,206,131,216"})#Function to draw a rectangleint(tuple(text_loc[0]['boundingBox'].split(","))[0])def drawRectangle(text,location):    w1=int(tuple(location.split(","))[0])    h1=int(tuple(location.split(","))[1])    w2=int(tuple(location.split(","))[2])    h2=int(tuple(location.split(","))[3])    point1, point2 = (w1,h1),(w2, h2)    cv2.rectangle(image, point1, point2, (0,0,255),1)    #print(text)    return
+for i in range(0,len(text_loc)):    drawRectangle(text_loc[i]['text'],text_loc[i]['boundingBox'])
 
-import pandas as pd
-import matplotlib.pyplot as plt
-
-data = pd.read_csv("hubble_data.csv")
-data.head()
-
-headers = ["dist","rec_vel"]
- 
-data_no_headers = pd.read_csv("hubble_data_no_headers.csv", names = headers)
-data_no_headers.head()
-
-data_no_headers["dist"]
-
-#If we replace the index with distance, then plotting becomes easy, as distance becomes the x axis, while velocity becomes the y axis.
-data.set_index("distance", inplace= True)
-data.head()
-
-data.plot()
-plt.show()
-
-"""--------------------------------------------------------------------------"""
-import pandas as pd
-import matplotlib.pyplot as plt
- 
-data = pd.read_csv("wages_hours.csv")
-data.head()
-
-data = pd.read_csv("wages_hours.csv", sep = "\t")
-data.head()
-
-data2 = data[["AGE", "RATE"]]
-data2.head()
-
-#We’ll go for ascending (which is the default behaviour of the sort() function).
-data_sorted = data2.sort(["AGE"])
-data_sorted.head()
-
-data_sorted.set_index("AGE", inplace=True)
-data_sorted.head()
-
-data_sorted.plot()
-plt.show()
-
-"""--------------------------------------------------------------------------"""
-import pandas as pd
-import matplotlib.pyplot as plt
-
-headers = ["date", "visitors"]
-data = pd.read_csv("visitors.csv", skiprows=4, names = headers)
-data.head()
-
-headers = ["date", "visitors_new"]
-data_new = pd.read_csv("visitors-new.csv", skiprows=4, names = headers)
-data_new.head()
-
-#pd.merge() function merged the two dataframes.
-data_combined = pd.merge(data, data_new)
-data_combined.head()
-
-	
-data_combined.sort(["date"], inplace=True)
-
-data_combined.set_index("date", inplace=True)
-data_combined.head()
-
-data_combined.plot()
-plt.show()
-
-"""--------------------------------------------------------------------------"""
-data = pd.read_csv("operating-systems.csv")
-data.head()
-
-data.columns
-
-data["Value"]
-
-data["Item"]
+#Takes the input dictionary and makes a pandas data frame with 2 columns, text, position.def makeDataFrame(text_loc):    inputDataFrame=pd.DataFrame(text_loc)    return inputDataFrame    inputDataFrame=makeDataFrame(text_loc)
+#If box1 and box2 are horizontal return true, else return falsedef isHorizontal(Box1,Box2):    print(inputDataFrame['text'][i],inputDataFrame['boundingBox'][i])    print(inputDataFrame['text'][i+1],inputDataFrame['boundingBox'][i+1])    b1_w1=int(tuple(inputDataFrame['boundingBox'][i].split(","))[0])    b1_h1=int(tuple(inputDataFrame['boundingBox'][i].split(","))[1])    b1_w2=int(tuple(inputDataFrame['boundingBox'][i].split(","))[2])    b1_h2=int(tuple(inputDataFrame['boundingBox'][i].split(","))[3])        b2_w1=int(tuple(inputDataFrame['boundingBox'][i+1].split(","))[0])    b2_h1=int(tuple(inputDataFrame['boundingBox'][i+1].split(","))[1])    b2_w2=int(tuple(inputDataFrame['boundingBox'][i+1].split(","))[2])    b2_h2=int(tuple(inputDataFrame['boundingBox'][i+1].split(","))[3])        if(b1_h1==b2_h1 and b1_h2==b2_h2):        return True    else:        return False    for i in range(0,len(inputDataFrame)-1):    print(isHorizontal(inputDataFrame['text'][i],inputDataFrame['text'][i+1]))
+print("-----------------------") 
+#if box1 and box2 are vertical return true, else return false  def isVertical(Box1,Box2):    print(inputDataFrame['text'][i],inputDataFrame['boundingBox'][i])    print(inputDataFrame['text'][j],inputDataFrame['boundingBox'][j])    b1_w1=int(tuple(inputDataFrame['boundingBox'][i].split(","))[0])    b1_h1=int(tuple(inputDataFrame['boundingBox'][i].split(","))[1])    b1_w2=int(tuple(inputDataFrame['boundingBox'][i].split(","))[2])    b1_h2=int(tuple(inputDataFrame['boundingBox'][i].split(","))[3])        b2_w1=int(tuple(inputDataFrame['boundingBox'][j].split(","))[0])    b2_h1=int(tuple(inputDataFrame['boundingBox'][j].split(","))[1])    b2_w2=int(tuple(inputDataFrame['boundingBox'][j].split(","))[2])    b2_h2=int(tuple(inputDataFrame['boundingBox'][j].split(","))[3])        if(b1_w1==b2_w1 or (b1_w1>b2_w1 and b1_w2>b2_w2 and b1_w1<b2_w2 and b1_w2>b2_w2)):        #print(b1_w1,b2_w1)        return True    else:        return False    for i in range(0,len(inputDataFrame)-1):    for j in range(0,len(inputDataFrame)-1):        if((inputDataFrame['text'][i]!=inputDataFrame['text'][j])):            print(isVertical(inputDataFrame['text'][i],inputDataFrame['text'][j]))
+        
+print("-----------------------")     '''#Uses isvertical() method to check if boxes are vertically alligned to find the column for that text given.    def findColumn(inputDataFrame,text):        return    for i in range(0,len(inputDataFrame)-1):    print(findColumn(inputDataFrame,inputDataFrame['text'][i]))            cv2.imshow('Detected',image)cv2.waitKey(0)cv2.destroyAllWindows()'''            
