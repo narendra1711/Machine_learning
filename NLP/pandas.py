@@ -1,12 +1,115 @@
-# -*- coding: utf-8 -*-"""Created on Wed May 16 12:20:14 2018
-@author: Narendra_Mugada"""
-import requestsimport urllib3from PIL import Imagefrom io import BytesIOimport matplotlib.pyplot as pltimport cv2import pandas as pd#Reading an imageimage=cv2.imread("pic.jpg")
-#Input values in a dicttext_loc=[]text_loc.append({"text":"Ordering","boundingBox":"45,157,85,167"})text_loc.append({"text":"address","boundingBox":"89,157,126,167"})text_loc.append({"text":"Metsa","boundingBox":"45,175,80,185"})text_loc.append({"text":"Wood","boundingBox":"84,175,118,185"})text_loc.append({"text":"Kerto","boundingBox":"123,175,154,185"})text_loc.append({"text":"Punkaharaju","boundingBox":"159,175,225,185"})text_loc.append({"text":"Box","boundingBox":"75,191,97,201"})text_loc.append({"text":"4607","boundingBox":"101,191,130,201"})text_loc.append({"text":"02020","boundingBox":"44,206,80,216"})text_loc.append({"text":"Metsal","boundingBox":"85,206,131,216"})#Function to draw a rectangleint(tuple(text_loc[0]['boundingBox'].split(","))[0])def drawRectangle(text,location):    w1=int(tuple(location.split(","))[0])    h1=int(tuple(location.split(","))[1])    w2=int(tuple(location.split(","))[2])    h2=int(tuple(location.split(","))[3])    point1, point2 = (w1,h1),(w2, h2)    cv2.rectangle(image, point1, point2, (0,0,255),1)    #print(text)    return
-for i in range(0,len(text_loc)):    drawRectangle(text_loc[i]['text'],text_loc[i]['boundingBox'])
+# -*- coding: utf-8 -*-
+"""
+Created on Mon May 21 16:13:07 2018
 
-#Takes the input dictionary and makes a pandas data frame with 2 columns, text, position.def makeDataFrame(text_loc):    inputDataFrame=pd.DataFrame(text_loc)    return inputDataFrame    inputDataFrame=makeDataFrame(text_loc)
-#If box1 and box2 are horizontal return true, else return falsedef isHorizontal(Box1,Box2):    print(inputDataFrame['text'][i],inputDataFrame['boundingBox'][i])    print(inputDataFrame['text'][i+1],inputDataFrame['boundingBox'][i+1])    b1_w1=int(tuple(inputDataFrame['boundingBox'][i].split(","))[0])    b1_h1=int(tuple(inputDataFrame['boundingBox'][i].split(","))[1])    b1_w2=int(tuple(inputDataFrame['boundingBox'][i].split(","))[2])    b1_h2=int(tuple(inputDataFrame['boundingBox'][i].split(","))[3])        b2_w1=int(tuple(inputDataFrame['boundingBox'][i+1].split(","))[0])    b2_h1=int(tuple(inputDataFrame['boundingBox'][i+1].split(","))[1])    b2_w2=int(tuple(inputDataFrame['boundingBox'][i+1].split(","))[2])    b2_h2=int(tuple(inputDataFrame['boundingBox'][i+1].split(","))[3])        if(b1_h1==b2_h1 and b1_h2==b2_h2):        return True    else:        return False    for i in range(0,len(inputDataFrame)-1):    print(isHorizontal(inputDataFrame['text'][i],inputDataFrame['text'][i+1]))
-print("-----------------------") 
-#if box1 and box2 are vertical return true, else return false  def isVertical(Box1,Box2):    print(inputDataFrame['text'][i],inputDataFrame['boundingBox'][i])    print(inputDataFrame['text'][j],inputDataFrame['boundingBox'][j])    b1_w1=int(tuple(inputDataFrame['boundingBox'][i].split(","))[0])    b1_h1=int(tuple(inputDataFrame['boundingBox'][i].split(","))[1])    b1_w2=int(tuple(inputDataFrame['boundingBox'][i].split(","))[2])    b1_h2=int(tuple(inputDataFrame['boundingBox'][i].split(","))[3])        b2_w1=int(tuple(inputDataFrame['boundingBox'][j].split(","))[0])    b2_h1=int(tuple(inputDataFrame['boundingBox'][j].split(","))[1])    b2_w2=int(tuple(inputDataFrame['boundingBox'][j].split(","))[2])    b2_h2=int(tuple(inputDataFrame['boundingBox'][j].split(","))[3])        if(b1_w1==b2_w1 or (b1_w1>b2_w1 and b1_w2>b2_w2 and b1_w1<b2_w2 and b1_w2>b2_w2)):        #print(b1_w1,b2_w1)        return True    else:        return False    for i in range(0,len(inputDataFrame)-1):    for j in range(0,len(inputDataFrame)-1):        if((inputDataFrame['text'][i]!=inputDataFrame['text'][j])):            print(isVertical(inputDataFrame['text'][i],inputDataFrame['text'][j]))
-        
-print("-----------------------")     '''#Uses isvertical() method to check if boxes are vertically alligned to find the column for that text given.    def findColumn(inputDataFrame,text):        return    for i in range(0,len(inputDataFrame)-1):    print(findColumn(inputDataFrame,inputDataFrame['text'][i]))            cv2.imshow('Detected',image)cv2.waitKey(0)cv2.destroyAllWindows()'''            
+@author: Narendra_Mugada
+"""
+
+subscription_key = "d91ca35819a44f06aa2d69b214b2f6a1"
+assert subscription_key
+vision_base_url = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/"
+vision_analyze_url = vision_base_url + "analyze"
+#image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Atomist_quote_from_Democritus.png/338px-Atomist_quote_from_Democritus.png"
+
+import requests
+
+image_path=r"D:\Project\pic.jpg"
+image_data = open(image_path, "rb").read()
+
+ocr_url = vision_base_url + "ocr"
+print(ocr_url)
+
+headers  = {'Ocp-Apim-Subscription-Key': subscription_key,"Content-Type": "application/octet-stream" }
+params   = {'language': 'unk', 'detectOrientation ': 'true','visualFeatures': 'Categories,Description,Color'}
+#data     = {'url': image_url}
+response = requests.post(ocr_url, headers=headers, params=params, data=image_data, verify=False)
+response.raise_for_status()
+
+analysis = response.json()
+
+line_infos = [region["lines"] for region in analysis["regions"]]
+word_infos = []
+for line in line_infos:
+    for word_metadata in line:
+        for word_info in word_metadata["words"]:
+            word_infos.append(word_info)
+word_infos
+
+import requests
+import cv2
+import pandas as pd
+import numpy as np
+#Reading an image
+image=cv2.imread("pic.jpg")
+
+#Input values in a dict
+text_loc=word_infos
+'''text_loc.append({"text":"Ordering","boundingBox":"45,157,85,167"})
+text_loc.append({"text":"address","boundingBox":"89,157,126,167"})
+text_loc.append({"text":"Metsa","boundingBox":"45,175,80,185"})
+text_loc.append({"text":"Wood","boundingBox":"84,175,118,185"})
+text_loc.append({"text":"Kerto","boundingBox":"123,175,154,185"})
+text_loc.append({"text":"Punkaharaju","boundingBox":"159,175,225,185"})
+text_loc.append({"text":"Box","boundingBox":"75,191,97,201"})
+text_loc.append({"text":"4607","boundingBox":"101,191,130,201"})
+text_loc.append({"text":"02020","boundingBox":"45,206,80,216"})
+text_loc.append({"text":"Metsal","boundingBox":"85,206,131,216"})'''
+
+def createDateframe(text_loc) :
+    df=pd.DataFrame(text_loc)
+    df = df.join(pd.DataFrame(df['boundingBox'].str.split(',').tolist(),columns = ['x1','y1','x2','y2']))
+    del df['boundingBox']
+    df.x1 = df.x1.astype(np.int64)
+    df.y1 = df.y1.astype(np.int64)
+    df.x2 = df.x2.astype(np.int64)
+    df.y2 = df.y2.astype(np.int64)
+    return df
+
+df=createDateframe(text_loc)
+
+#Function to draw a rectangle
+def drawRectangle(text,x1,y1,x2,y2):
+    cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,0,255),1)
+    return
+
+for i in range(0,len(text_loc)):
+    drawRectangle(df['text'][i],df['x1'][i],df['y1'][i],df['x2'][i],df['y2'][i])
+
+cv2.imshow('Detected',image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+'''def ishorizontal(box1,box2):
+    if((box1['x1'][i] != box2['x1'][i+1]) and (box1['y1'][i] == box2['y1'][i+1])) :
+        print(box1['text'][i],box2['text'][i+1])
+    return
+print ("\nhorizontal words:\n")
+for i in range(0,len(text_loc)-1):
+    ishorizontal(df[i:i+1],df[i+1:i+2])
+    
+
+def isvertical(box1,box2):
+    if((box1['y1'][i] != box2['y1'][j]) and (box1['x1'][i] == box2['x1'][j]) and i<j) :
+        print(box1['text'][i],box2['text'][j])
+    return
+print ("\n\nvertical words:\n")
+for i in range(0,len(text_loc)-1):
+    for j in range(0,len(text_loc)-1):
+        isvertical(df[i:i+1],df[j:j+1])'''
+        
+def findrow(string,df):
+    if(string['y1'][7]==df['y1'][i]):
+        print(df['text'][i])
+    #print(string['location'][i][0])
+print ("\n\nsame row words:\n")        
+for i in range(0,len(text_loc)-1):    
+    findrow(df[7:8],df[i:i+1])
+    
+def findcolumn(string,df):
+    if(string['x1'][0]==df['x1'][i]):
+        print(df['text'][i])
+    #print(string['location'][i][0])
+print ("\n\nsame column words:\n")                
+for i in range(0,len(text_loc)-1):    
+    findcolumn(df[0:1],df[i:i+1])
+   
