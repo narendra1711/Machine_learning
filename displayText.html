@@ -1,0 +1,30 @@
+<html>
+<body>
+<form method="post">
+    <div id="sb-search" class="sb-search">
+
+        <table>
+            {% for i in range(0,lenparam) %}
+
+            <tr>
+                <td align="left"><h1>{{ name[i]['File_Name'] }}</h1></td>
+            </tr>
+            {% for j in range(0,(name[i]['File_Text'])|length) %}
+            <tr>
+                <!--<td align="left"> {{ name[i]['File_Text'] }} </td><br> -->
+
+                <td align="left">
+
+                    {{ name[i]['File_Text'][j] }}
+                </td>
+
+
+            </tr>
+            {% endfor %}
+
+            {% endfor %}
+        </table>
+    </div>
+</form>
+</body>
+</html>

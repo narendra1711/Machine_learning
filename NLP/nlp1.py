@@ -1,60 +1,101 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 18 18:53:30 2018
-http://pythonforengineers.com/introduction-to-nltk-natural-language-processing-with-python/
-@author: narendra
-"""
+import pandas as pd
+import numpy as np
+import cv2
 
-import nltk
-#nltk.download()
-import nltk.classify.util
-from nltk.classify import NaiveBayesClassifier
-from nltk.corpus import movie_reviews
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.corpus import wordnet
-from nltk import pos_tag
-sentence = "The Quick brown fox, Jumps over the lazy little dog. Hello World."
-sentence.split(" ")
+word_infos=[]
+dict={}
+f = open('Input.txt','r')
 
-'''We can split the function on a space (” “) to get all the words. 
-The problem with this is, we cannot extract punctuation marks like full stops, 
-and this simple parser will not be able to handle every single type of sentence.'''
-word_tokenize(sentence)
+for line in f:
+    dict={"boundingBox":line.strip().split('\'')[3],
+            "text":line.strip().split('\'')[7]}
+    word_infos.append(dict)
+    
+#Convert word_infos dictionary to Dataframe and converts boundaries to 4 individual columns x1,y1,x2,y2
+df=pd.DataFrame(word_infos)
+df = df.join(pd.DataFrame(df['boundingBox'].str.split(',').tolist(),columns = ['x1','y1','x2','y2']))
+del df['boundingBox']
+df.x1 = df.x1.astype(np.int64)
+df.y1 = df.y1.astype(np.int64)
+df.x2 = df.x2.astype(np.int64)
+df.y2 = df.y2.astype(np.int64)
 
-'''Another useful feature is that nltk can figure out if a parts of a sentence are nouns, adverbs, verbs etc.
+image_path=r"D:\Project\pic.jpg"
+image=cv2.imread(image_path)
+def drawRectangle(text,x1,y1,x2,y2):
+    cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,0,255),1)
+    return
 
-The pos_tag() works on the output of word_tokenize():'''
-w = word_tokenize(sentence)
-nltk.pos_tag(w)
+for i in range(0,len(word_infos)):
+    drawRectangle(df['text'][i],df['x1'][i],df['y1'][i],df['x2'][i],df['y2'][i])
 
-#If you want to know what those tags mean, you can search for them online, or use the inbuilt functions:
-nltk.help.upenn_tagset()
+#This part displays input image with all Rectangles for given boundaries in dataframe
+#cv2.imwrite(r'D:\WorkArea\Code\Invoice\pics\pics\Phase-1\velimark-2.jpg', image)
 
-syn = wordnet.synsets("computer")
-print(syn)
-print(syn[0].name())
-print(syn[0].definition())
- 
-print(syn[1].name())
-print(syn[1].definition())
+#keys=['Vendor','address','Please','deliver','to:','Purchase','Order','Ordering','Terms','of','Payment','PO','Number','Date','Contact','Person','Our','VAT','Registration','No.']
 
-syn = wordnet.synsets("talk")
-syn[0].examples()
+keys=['Ordering','address']
+kw=[]
+d={}
+for i in range(0 , len(df)):
+    for j in range(0 , len(keys)):
+        if df['text'][i]==keys[j]:
+            d={'text':df['text'][i],
+               'x1':df['x1'][i],
+               'y1':df['y1'][i],
+               'x2':df['x2'][i],
+               'y2':df['y2'][i]}
+            kw.append(d)
 
-#Hypernym is the root of the word, color in the image above. Hyponyms are similar words, like the colors red blue green etc.
-syn = wordnet.synsets("speak")[0]
- 
-print(syn.hypernyms())
- 
-print(syn.hyponyms())
+final_dict={}
+sub_dict={}
+final=[]
 
-syn = wordnet.synsets("good")
-for s in syn:
-    for l in s.lemmas():
-        if (l.antonyms()):
-            print(l.antonyms())
-            
-syn = wordnet.synsets("book")
-for s in syn:
-    print(s.lemmas())
+for i in range(0,len(kw)-1):
+    if(kw[i]['y1']==kw[i+1]['y1']):
+        sub_dict=kw[i],kw[i+1]
+        
+
+image_path=r"D:\Project\pic.jpg"
+image=cv2.imread(image_path)
+def drawRectangle(text,x1,y1,x2,y2):
+    cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,0,255),1)
+    return
+
+for i in range(0,len(final)):
+    drawRectangle(final[i]['final_text'],final[i]['x1'],final[i]['y1'],final[i]['x2'],final[i]['y2'])
+#drawRectangle("Vendor",67,411,117,13)
+
+#This part displays input image with all Rectangles for given boundaries in dataframe
+#cv2.imwrite(r'D:\WorkArea\Code\Invoice\pics\pics\Phase-1\velimark-2.jpg', image)
+  
+
+final_dict={}
+final=[]
+df_kw=pd.DataFrame(kw)
+a=df_kw.groupby('y1')
+
+
+for i in a:
+    c=[]
+    b=""
+    for j in range(0,(len(i[1]))):
+       #print (i[1]['text'].iloc[j])
+       x1=y1=x2=y2=0
+       b=' '.join([b,i[1]['text'].iloc[j]])
+       x1=i[1]['x1'].iloc[0]
+       x2=i[1]['x2'].iloc[len(i[1])-1]+i[1]['x1'].iloc[len(i[1])-1]-i[1]['x1'].iloc[0]
+       y1=i[1]['y1'].iloc[0]
+       y2=i[1]['y2'].iloc[len(i[1])-1]
+    c.append(b) 
+    print (c)
+    final_dict={"text":c,"x1":x1,"x2":x2,"y1":y1,"y2":y2}
+    final.append(final_dict)
+
+
+for i in range(0,len(final)):
+    drawRectangle(final[i]['text'],final[i]['x1'],final[i]['y1'],final[i]['x2'],final[i]['y2'])
+cv2.imshow('Detected',image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()    
+

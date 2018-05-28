@@ -1,0 +1,104 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed May 16 12:20:14 2018
+
+@author: Narendra_Mugada
+"""
+
+import requests
+import urllib3
+from PIL import Image
+from io import BytesIO
+import matplotlib.pyplot as plt
+import cv2
+
+#Reading an image
+image=cv2.imread("pic.jpg")
+
+#Input values in a dict
+text_loc=[]
+text_loc.append({"text":"Purchase","location":"346,70,429,84"})
+text_loc.append({"text":"Order","location":"435,70,486,84"})
+text_loc.append({"text":"Number","location":"668,70,756,84"})
+
+#Function to draw a rectangle
+
+def drawRectangle(text,location):
+    w1=int(tuple(location.split(","))[0])
+    h1=int(tuple(location.split(","))[1])
+    w2=int(tuple(location.split(","))[2])
+    h2=int(tuple(location.split(","))[3])
+    point1, point2 = (w1,h1),(w2, h2)
+    cv2.rectangle(image, point1, point2, (0,0,255),1)
+    #print(text)
+    return
+
+for i in range(0,len(text_loc)):
+    drawRectangle(text_loc[i]['text'],text_loc[i]['location'])
+
+#cv2.imshow('Detected',image)
+#cv2.waitKey(0)
+#cv2.destroyAllWindows()
+
+
+autualValues={}
+for i in range(0,len(text_loc)):
+    bound=[]
+    w1=int(tuple(text_loc[i]['location'].split(","))[0])
+    h1=int(tuple(text_loc[i]['location'].split(","))[1])
+    w2=int(tuple(text_loc[i]['location'].split(","))[2])
+    h2=int(tuple(text_loc[i]['location'].split(","))[3])
+    bound.append(w1)
+    bound.append(h1)
+    bound.append(w2)
+    bound.append(h2)
+    autualValues[i]={"text":text_loc[i]['text'],"location":bound}
+
+'''def arr(word1,word2) :
+    if (word1['location'][1] == word2['location'][1]) and (word1['location'][3] == word2['location'][3]) :
+        if (word1['location'][0] < word2['location'][0]) and (word1['location'][2] < word2['location'][2]) :
+            print (word1['text'],"is left of ",word2['text'],"and both are horizontal")
+            
+            
+    return
+
+arr(autualValues[0],autualValues[1])'''
+
+
+'''def arr(word,autualValues):
+    horizontal={}
+    for j in range(0,len(autualValues)):
+        horizon_words={}
+        if(word['location'][1]==autualValues[j]['location'][1]) and (word['location'][0]!=autualValues[j]['location'][0]):
+            horizon_words={"word":autualValues[j]['text'],"border":autualValues[j]['location'][0]-word['location'][0]}
+            #print(word['text'],autualValues[j]['text'],autualValues[j]['location'][0]-word['location'][0])
+            
+        horizontal={"Word":word['text'],"Value":horizon_words}
+        print(horizontal)
+    return
+
+for i in range(0,len(autualValues)):
+    arr(autualValues[i],autualValues)'''
+    
+def arr(autualValues):
+    
+    for i in range(0,len(autualValues)-1):
+        for j in range(i+1,len(autualValues)):
+            if(autualValues[i]['location'][1]==autualValues[j]['location'][1]) and (autualValues[i]['location'][0]!=autualValues[j]['location'][0]):
+                print(autualValues[i]['text'],autualValues[j]['text'],autualValues[j]['location'][0]-autualValues[i]['location'][0])
+               
+    return
+
+arr(autualValues)
+
+
+
+
+
+
+
+
+
+
+
+
