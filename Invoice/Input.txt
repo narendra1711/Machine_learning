@@ -25,6 +25,7 @@
 {'boundingBox': '171,373,76,9', 'text': '111-222-334'}
 {'boundingBox': '59,391,120,13', 'text': 'client@example.net'}
 {'boundingBox': '59,431,58,9', 'text': 'SHIPPING'}
+{'boundingBox': '121,431,21,9', 'text': 'TO:'}
 {'boundingBox': '59,449,27,10', 'text': 'John'}
 {'boundingBox': '91,450,23,9', 'text': 'Doe'}
 {'boundingBox': '118,449,35,10', 'text': 'Office'}
