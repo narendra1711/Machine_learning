@@ -1,0 +1,7 @@
+Invoice #
+Invoice Date
+Name of Rep.
+Contact Phone
+Payment Terms
+Amount Due.
+Your company LLC
