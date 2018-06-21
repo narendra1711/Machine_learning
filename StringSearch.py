@@ -4,15 +4,15 @@ import numpy as np
 import cv2
  
 #------------------------------------------------------------------------------------------
-#Input=Output of Vision API
-inputFileName="input_boundaries.txt"
-#keysFileName="keys.txt"
+inputFileName="Quotation_Boundaries.txt"
 horiFileName="Horizontal_Keys.txt"
 vertiFileName="Vertical_Keys.txt"
 tabularFileName="Tabular_Keys.txt"
 imagePath="input.png"
-string="Invoice Address"
-
+#string="Contact Person"
+f=open("Output.txt","w+")
+#string=['Purchase Order','PO Number','Date','Our VAT Registration No.','Your Vendor No. with us:','Currency']
+string=['Customer Name']
 #------------------------------------------------------------------------------------------
 #Function to read an input file and create word infos(Output of Vision API)
 def readInputFile(inputFileName):
@@ -48,9 +48,7 @@ def readKeywords(horiFileName,vertiFileName,tabularFileName):
     horiFile = open(horiFileName,'r')
     vertiFile = open(vertiFileName,'r')
     tabFile = open(tabularFileName,'r')
-    #tabularFile = open(tabularFileName,'r')
     sub_keys=[]
-    #tab_keys=[]
 
     for line in horiFile:
         string=line.split(),"Horizontal"
@@ -67,10 +65,6 @@ def readKeywords(horiFileName,vertiFileName,tabularFileName):
     return sub_keys
 keys=[]
 keys=readKeywords(horiFileName,vertiFileName,tabularFileName)
-
-#keys=[["Please","deliver","to:"],['Purchase','Order'],['Ordering','address'],['Date'],['Vendor','address'],['Your','Vendor','No.','with','us:'],['Delivery','Date:'],['Contact','Person'],['PO','Number'],['Our','VAT','Registration','No.'],['Terms','of','Payment'],['Item'],['Material'],['Description'],['Order','quantity'],['Total','net','item','value'],['Telephone'],['Fax'],['Currency'],['Total','weight'],['Total','volume'],['Head','Office'],['Invoice','Address'],['Ordering','Office'],['Unit'],['Net','price'],['Net','value'],['Unit']]
-#keys=[['Item'],['Material'],['Description'],['Order','quantity'],['Total','net','item','value']]
-#keys=[["Please","deliver","to:"],['Purchase','Order'],['Ordering','address'],['Date'],['Vendor','address'],['Your','Vendor','No.','with','us:'],['Delivery','Date:'],['Contact','Person'],['PO','Number'],['Our','VAT','Registration','No.'],['Terms','of','Payment'],['Telephone'],['Fax'],['Currency']]
 #------------------------------------------------------------------------------------------
 keys_bound=keys.copy()
 
@@ -165,7 +159,56 @@ def append_resetIndex(df, df_keys):
 df_total,df_subtotal=append_resetIndex(df, df_keys)
 
 #------------------------------------------------------------------------------------------
+#Horizontal grouping
+df_finalHor=df_final.loc[df_final['pos']=='Horizontal']
+def Horizontal(start,end):
+    subString=""
+    a=[]
+    
+    if(end!=9999):
+        print("IF")
+        for i in range(0,len(df_total)):
+            
+            if(abs(df_finalHor.y1[start]-df_total.y1[i])<=3 and 
+                   df_finalHor.x1[start]<df_total.x1[i] and
+                   abs(df_finalHor.y1[start]-df_finalHor.y1[end])>3):
+                print(df_finalHor.y1[start])
+                print(df_finalHor.y1[end])
+                print(df_finalHor.text[start],"and",df_finalHor.text[end],"are not in same row")
+                subString=subString+" "+df_total.text[i]
+                a.append({"x1":df_total.x1[i],"y1":df_total.y1[i],
+                          "x2":df_total.x2[i],"y2":df_total.y2[i]})
+                
+        
+            elif(abs(df_finalHor.y1[start]-df_total.y1[i])<=3 and
+                     df_finalHor.x1[start]<df_total.x1[i] and
+                     df_finalHor.x1[end]>df_total.x1[i] and
+                     abs(df_finalHor.y1[start]-df_finalHor.y1[end])<=3):
+                print(df_finalHor.text[start],df_finalHor.text[end],"are in same row")
+                subString=subString+" "+df_total.text[i]
+                a.append({"x1":df_total.x1[i],"y1":df_total.y1[i],
+                          "x2":df_total.x2[i],"y2":df_total.y2[i]})
+    elif(end==9999):
+        print("ELSE")
+        for i in range(0,len(df_total)):
+            if(abs(df_finalHor.y1[start]-df_total.y1[i])<=3 and 
+                   df_finalHor.x1[start]<df_total.x1[i]):
+                print(df_finalHor.text[start],"is the last index in df_finalHor")
+                print(df_total.text[i])
+                subString=subString+" "+df_total.text[i]
+                a.append({"x1":df_total.x1[i],"y1":df_total.y1[i],
+                          "x2":df_total.x2[i],"y2":df_total.y2[i]})
+    a=pd.DataFrame(a)
+    print(a)
+    x1=a.x1.min()
+    y1=a.y1.min()
+    x2=(a.x1+a.x2).max()-a.x1.min()
+    y2=a.y2.max()
+    return subString,x1,y1,x2,y2
+#------------------------------------------------------------------------------------------
 #This function extracts vertical data between two keywords
+df_finalVer=df_final.loc[df_final['pos']=='Vertical'] 
+df_finalVer=df_finalVer.reset_index(drop=True)
 def extractVerticalData(prev,nxt):
     extract=[]
     extractedData=[]
@@ -176,11 +219,8 @@ def extractVerticalData(prev,nxt):
         if(df['x1'][i]==prev['x1'] and df['y1'][i]==prev['y1'] ):
             a=len(prev.text.split(' '))-2
             a=a+i
-            #print("a",a)
-            #extract.append({'text':txt+df_total['text'][i],"Boundaries":[df_total['x1'][i],df_total['y1'][i],df_total['x2'][i],df_total['y2'][i]]})
         if(df['x1'][i]==nxt['x1'] and df['y1'][i]==nxt['y1'] ):
             b=i
-            #print("b",b)
     for i in range(a+1,b) :  
             extract.append({'text':txt+df['text'][i],"Boundaries":[df['x1'][i],df['y1'][i],df['x2'][i],df['y2'][i]]})
     extractedData.append({"text":prev['text'],"data":extract})
@@ -196,7 +236,6 @@ def extractVerticalData(prev,nxt):
             x2_temp=extractedData[0]['data'][j]['Boundaries'][2]
         x3=max(x3,extractedData[0]['data'][j]['Boundaries'][0])
         x2=x3+x2_temp
-        #print(x2_temp)
         if(y3<extractedData[0]['data'][j]['Boundaries'][1]):
             y2_temp=extractedData[0]['data'][j]['Boundaries'][3]
         y3=max(y3,extractedData[0]['data'][j]['Boundaries'][1])
@@ -206,60 +245,66 @@ def extractVerticalData(prev,nxt):
     return (extractedData,x1,y1,x2,y2)
 
 #------------------------------------------------------------------------------------------
-#This function extracts horizaontal data between two keywords
-extract=[]
-extractedData=[]
-
-def extractHorizontalData(current):
-    for i in range(0,len(df_total)):
-        if((abs(df_total['y1'][i]-current['y1'])<=4 ) and 
-           (abs(df_total['y2'][i]-current['y2'])<=4) and
-           current['x1']<=df_total['x1'][i] and
-           current['text']!=df_total['text'][i]):
-            output=df_total.text[i]
-            x1=df_total.x1[i]
-            y1=df_total.y1[i]
-            x2=df_total.x2[i]
-            y2=df_total.y2[i]
-            text=current['text']
-            extractedData.append({"text":current['text'],
-                                  "data":[{"text":df_total['text'][i],
-                                           "Boundaries":[df_total.x1[i],
-                                                         df_total.y1[i],
-                                                         df_total.x2[i],
-                                                         df_total.y2[i]]
-                                           }]})
-                                           
-    return (text,x1,y1,x2,y2,output)
-#------------------------------------------------------------------------------------------
-#This function extratcs tabular data
+#This function extracts tabular data
 dummy=[]
-st="Total net item value"
-def extractTabularData(prev,nxt):
-    boundary=""
-    for i in range(0,len(df_total)):
-        if(df_total.text[i].strip()==st.strip() and st.strip() not in ("Head Office","Invoice Address","Ordering Office") ):
-            boundary=df_total.iloc[i]
-            print("IN")
+df_finalTab=df_final.loc[df_final['pos']=='Tabular'] 
+df_finalTab=df_finalTab.reset_index(drop=True)
+def extractTabularData(start,end):
+    if(end!=9999):#Data between two columns and with boundary
+        prev=df_finalTab.iloc[start]
+        nxt=df_finalTab.iloc[end]
+        print("IF")
+        if(prev.text.strip() in ('Item','Material','Description','Order quantity','Net price','Net value','Unit')):
+            boundary_y1=1270
         else:
-            boundary=""
-    print("Boundary",boundary)
-    for i in range(0,len(df_total)):
-        if(prev['x1']<=(df_total.x1[i]+2) and
-           nxt['x1']-2>df_total.x1[i] and
-           prev['y1']<df_total.y1[i]):
-            if(boundary!=""):
-                if(boundary['y1']>df_total.y1[i]):
+            boundary_y1=9999
+        print(boundary_y1)
+        for i in range(0,len(df_total)):
+            if(prev['x1']<=(df_total.x1[i]+2) and
+               nxt['x1']-2>df_total.x1[i] and
+               prev['y1']<df_total.y1[i]):
+                if(boundary_y1==1270 and df_total.y1[i]<boundary_y1  and abs(prev.y1-nxt.y1)<=5):
+                    dummy.append({"text":df_total.text[i],"x1":df_total.x1[i],"y1":df_total.y1[i],"x2":df_total.x2[i],"y2":df_total.y2[i]})    
+                elif(boundary_y1==9999 and abs(prev.y1-nxt.y1)>5):
                     dummy.append({"text":df_total.text[i],"x1":df_total.x1[i],"y1":df_total.y1[i],"x2":df_total.x2[i],"y2":df_total.y2[i]})
-            else:
-                
+                print(dummy)
+            elif(prev['x1']<=(df_total.x1[i]+2) and
+               prev['y1']<df_total.y1[i] and 
+               boundary_y1==1270 and 
+               df_total.y1[i]<boundary_y1 and 
+               abs(prev.y1-nxt.y1)>5):
                 dummy.append({"text":df_total.text[i],"x1":df_total.x1[i],"y1":df_total.y1[i],"x2":df_total.x2[i],"y2":df_total.y2[i]})
-            print("IF")
-    
-    
-        
-                    
-    return dummy
+        a=pd.DataFrame(dummy)
+        x1=a.x1.min()
+        y1=a.y1.min()
+        x2=(a.x1+a.x2).max()-a.x1.min()
+        y2=(a.y1+a.y2).max()-a.y1.min()
+                
+    elif(end==9999):#Last column value that has no boundary
+        prev=df_finalTab.iloc[start]
+        print(prev)
+        if(prev.text.strip() in ('Item','Material','Description','Order quantity','Net price','Net value','Unit')):
+            boundary_y1=1270
+        else:
+            boundary_y1=9999
+        print(boundary_y1)
+        a=[]
+        for i in range(0,len(df_total)):
+            if(df_total.y1[i]>prev.y1+1 and df_total.x1[i]>=prev.x1 and boundary_y1==9999):
+                a.append({"text":df_total.text[i],"x1":df_total.x1[i],"y1":df_total.y1[i],
+                         "x2":df_total.x2[i],"y2":df_total.y2[i]})
+                print("IF")
+            elif(boundary_y1==1270):
+                a.append({"text":df_total.text[i],"x1":df_total.x1[i],"y1":df_total.y1[i],
+                         "x2":df_total.x2[i],"y2":df_total.y2[i]})
+                print("ELSE")
+        a=pd.DataFrame(a)
+        print(a)
+        x1=a.x1.min()
+        y1=a.y1.min()
+        x2=(a.x1+a.x2).max()-a.x1.min()
+        y2=(a.y1+a.y2).max()-a.y1.min()
+    return x1,y1,x2,y2
  
 #------------------------------------------------------------------------------------------
 #This function checks whether the key word should be sent to extractHorizontalData or extractVerticalData
@@ -268,130 +313,125 @@ def checkHorizontalVertical(string,horiFileName,vertiFileName,tabularFileName):
     vertiFile = open(vertiFileName,'r')
     tabFile = open(tabularFileName,'r')
     sub_keys=[]
-
+    
     for line in horiFile:
+        for k in range(0,len(string)):
+            if (str(string[k]).strip() == line.strip()):
+                df_final.sort_values('pos')
+            
+                for i in range(0,len(df_finalHor)):
+                    if(str(string[k]).strip()==df_finalHor.text[i].strip() and i!=len(df_finalHor)-1):
+                        start=i
+                        end=start+1
+                    elif(str(string[k]).strip()==df_finalHor.text[i].strip() and i==len(df_finalHor)-1):
+                        start=i
+                        end=9999
+                #print(start,end)
+                subString,x1,y1,x2,y2=Horizontal(start,end)   
+                
+                #print(subString,x1,y1,x2,y2)     
+                out={"Input":string[k],"Output":subString}
+                f.write(out['Input']+out['Output']+"\n")
+    f.close()
+    image_path=imagePath
+    image=cv2.imread(image_path)
+    def drawRectangleKey(text,x1,y1,x2,y2):
+        cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,0,255),1)
+        return
+    
+    drawRectangleKey("text",df_finalHor.x1[start],df_finalHor.y1[start],
+                     df_finalHor.x2[start],df_finalHor.y2[start])
+    
+    def drawRectangleValue(text,x1,y1,x2,y2):
+        cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,100,0),1)
+        return
+    
+    drawRectangleValue("text",x1,y1,x2,y2)
+    
+    #cv2.imshow('Detected',image)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+    cv2.imwrite(r'D:\Study\Code\OCR_Invoice\Setup\rect.png', image)
+            
+    for line in vertiFile:
+        for k in range(0,len(string)):
+            #if str(string[k]).strip in line:
+            if (str(string[k]).strip() == line.strip()):
+                df_final.sort_values('pos')
+                for i in range(0,len(df_finalVer)-1):
+                    if(str(string[k]).strip()==df_finalVer.text[i].strip()):
+                        index=i
+                        j=index+1
+                #print(df_final.sort_values('pos'))
+                #print(index,j)
+                
+                text,x1,y1,x2,y2=extractVerticalData(df_finalVer.iloc[index],df_finalVer.iloc[j])
+                print(text)
+                
+                #out={"Input":string[k],"Output":text}
+                #f.write(out['Input']+out['Output']+"\n")
+    #f.close()
+            #print(text,x1,y1,x2,y2)            
+            #extractedData,x1,y1,x2,y2=extractVerticalData(df_final.iloc[2],df_final.iloc[3])
+            #print(extractedData)
+    image_path=imagePath
+    image=cv2.imread(image_path)
+    
+    def drawRectangleKey(text,x1,y1,x2,y2):
+        cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,0,255),1)
+        return 
+    
+    drawRectangleKey('text',df_finalVer.x1[index],df_finalVer.y1[index],df_finalVer.x2[index],df_finalVer.y2[index])
+    
+    def drawRectangleValue(text,x1,y1,x2,y2):
+        cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,100,0),1)
+        return 
+    drawRectangleValue('text',x1,y1,x2,y2)
+    
+    #cv2.imshow('Detected',image)
+    cv2.imwrite(r'D:\Study\Code\OCR_Invoice\Setup\rect.png', image)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows() 
+    for line in tabFile:
         if (string.strip() == line.strip()):
             df_final.sort_values('pos')
-            for i in range(0,len(df_finalHor)):
-                if(string==df_finalHor.text[i].strip()):
-                    index=i
-            #print(index)
-            
-
-            text,x1,y1,x2,y2,output=extractHorizontalData(df_finalHor.iloc[index])
-            print(text,output)
-            
+            for i in range(0,len(df_finalTab)):
+                if(string.strip()==df_finalTab.text[i].strip()):
+                    if(i!=len(df_finalTab)-1):
+                        start=i
+                        end=i+1
+                    else:
+                        start=i
+                        end=9999
+                    x1,y1,x2,y2=extractTabularData(start,end)
+            print(x1,y1,x2,y2)
+            index=0
+            for j in range(0,len(df_finalTab)):
+                if(string.strip()==df_finalTab.text[j].strip()):
+                    index=j
+            print(index)
             image_path=imagePath
             image=cv2.imread(image_path)
             def drawRectangleKey(text,x1,y1,x2,y2):
                 cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,0,255),1)
-                return
-            
-            drawRectangleKey("text",df_finalHor.x1[index],df_finalHor.y1[index],df_finalHor.x2[index],df_finalHor.y2[index])
-            
-            def drawRectangleValue(text,x1,y1,x2,y2):
-                cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,100,0),1)
-                return
-            
-            drawRectangleValue("text",x1,y1,x2,y2)
-            
-            cv2.imshow('Detected',image)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-        else:
-            print("hello",string,line)
-    
-    for line in vertiFile:
-        
-        if string in line:
-            df_final.sort_values('pos')
-            for i in range(0,len(df_finalVer)-1):
-                if(string==df_finalVer.text[i].strip()):
-                    index=i
-                    j=index+1
-            #print(df_final.sort_values('pos'))
-            #print(index,j)
-            
-            text,x1,y1,x2,y2=extractVerticalData(df_finalVer.iloc[index],df_finalVer.iloc[j])
-            #print(text,x1,y1,x2,y2)            
-            #extractedData,x1,y1,x2,y2=extractVerticalData(df_final.iloc[2],df_final.iloc[3])
-            #print(extractedData)
-            image_path="input.png"
-            image=cv2.imread(image_path)
-            
-            def drawRectangleKey(text,x1,y1,x2,y2):
-                cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,0,255),1)
                 return 
+            drawRectangleKey('text',df_finalTab.x1[index],df_finalTab.y1[index],df_finalTab.x2[index],df_finalTab.y2[index])
             
-            drawRectangleKey('text',df_finalVer.x1[index],df_finalVer.y1[index],df_finalVer.x2[index],df_finalVer.y2[index])
-            
+            #cv2.imshow('Detected',image)
+            #cv2.imwrite(r'D:\Study\Code\OCR_Invoice\Setup\rect.png', image)
             def drawRectangleValue(text,x1,y1,x2,y2):
                 cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,100,0),1)
                 return 
             drawRectangleValue('text',x1,y1,x2,y2)
             
-            cv2.imshow('Detected',image)
-            #cv2.imwrite(r'D:\Study\Code\OCR_Invoice\Setup\rect.png', image)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows() 
-            
-    for line in tabFile:
-        if string in line:
-            for i in range(0,len(df_finalTab)):
-                if(string==df_finalTab.text[i].strip()):
-                    index=i
-                    j=i+1
-            #print(df_final.sort_values('pos'))
-            #print(index,j)
-            #text,x1,y1,x2,y2=extractTabularData(df_finalTab.iloc[index],df_finalTab.iloc[j])
-            print(index,j)
-            dummy=extractTabularData(df_finalTab.iloc[index],df_finalTab.iloc[j]) 
-            
-            image_path="input.png"
-            image=cv2.imread(image_path)
-            def drawRectangleKey(text,x1,y1,x2,y2):
-                    cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,0,255),1)
-                    return 
-                
-            drawRectangleKey('text',df_finalTab.x1[index],df_finalTab.y1[index],df_finalTab.x2[index],df_finalTab.y2[index])
-            for i in range(0,len(dummy)):
-                def drawRectangleValue(text,x1,y1,x2,y2):
-                    cv2.rectangle(image,(x1,y1) , (x1+x2,y1+y2), (0,100,0),1)
-                    return 
-                drawRectangleValue('text',dummy[i]['x1'],dummy[i]['y1'],dummy[i]['x2'],dummy[i]['y2'])
-                
-                #cv2.imshow('Detected',image)
-                cv2.imwrite(r'D:\Study\Code\OCR_Invoice\Setup\rect.png', image)
-                #cv2.waitKey(0)
-                #cv2.destroyAllWindows()
-            #print(text,x1,y1,x2,y2)            
-            #extractedData,x1,y1,x2,y2=extractTabularData(df_final.iloc[index],df_final.iloc[3])
-            #print(extractedData)
-    return sub_keys
-
-df_final=df_final.reset_index(drop=True)
-df_total=df_total.sort_values('x1')
-df_total=df_total.reset_index(drop=True)
-df_final=df_final.sort_values('y1')
-df_final=df_final.reset_index(drop=True)
-df_total=df_total.sort_values('y1')
-df_total=df_total.reset_index(drop=True)
-df_final=df_final.sort_values('y1')
-df_total=df_total.reset_index(drop=True)
-df_finalHor=df_final.loc[df_final['pos']=='Horizontal']
-df_finalVer=df_final.loc[df_final['pos']=='Vertical']  
-df_finalTab=df_final.loc[df_final['pos']=='Tabular'] 
-df_finalHor=df_finalHor.reset_index(drop=True)
-df_finalVer=df_finalVer.reset_index(drop=True)
-df_finalTab=df_finalTab.reset_index(drop=True)
-df_finalTab.sort_values(['y1','x2'],ascending=[False,False])
+            #cv2.imshow('Detected',image)
+            cv2.imwrite(r'D:\Study\Code\OCR_Invoice\Setup\rect.png', image) 
+    return text
 
 
-
-checkHorizontalVertical(string,horiFileName,vertiFileName,tabularFileName)
+text=checkHorizontalVertical(string,horiFileName,vertiFileName,tabularFileName)
 
   
 
 #--------------------------------------------------------------------------------------------
-  
 
