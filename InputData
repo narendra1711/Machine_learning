@@ -1,0 +1,40 @@
+Intent	Issue	Resolution
+FAQ-ACCESS	Logon Issue	One of the possible reasons for this error is, if the computer is attached to a IP phone, the power chord might be unplugged or the LAN cable to the IP phone might be un plugged. Suggestion is to check the power to IP phone and LAN connection to and from the IP phone.
+FAQ-ACCESS	Not able to connect to the Internet	Click on the AHD Quick lon on Sparsh, click on Create Request .It will ask for 'Requested Area' , for new VOIP the requested Area is 'IP Telephony --> Allocation(Request for allocation of IP Phone).
+FAQ-FACILITIES	What is the process to avail for all Stationery Items?	If you are job level 4. Please provide the snap shot of the master data or get approval from DM. If you have already having access to internet. Please ensure whether you have configured the proxy setting in internet explorer. The configuration script is http;//sparsh-ccd/kec.pac
+FAQ-ACCESS	unable to connect to the Internet 	"Dear Infoscion , 
+
+We from Computers and Communications Department (CCD) extend a warm welcome to you.
+
+We take care of procurement and maintenance of the Technology Infrastructure worldwide for Infosys. Technology infrastructure includes desktops, laptops, servers, Unix boxes and mainframes, Printers, IP-phone, live meetings, Video Conferencing, networking equipments and communication links. "
+FAQ-TRANSFER	FAQs-Transfer System	"Please find the attached document for clarification on the below mentioned issues:
+Want to change the Relieving Approver and Accepting Approver in E-Transfer
+What does the below status imply: ‘Mark no show of official transfer: action required’ in E-Transfer
+Various stages/Status of E-Transfer Request
+Want to know the Accepting Manager for my transfer request in E-Transfer
+My transfer is complete in the system, when will I get my transfer letter?
+My transfer is complete in the system, when will my PU/DU/location changes reflect in E-Transfer ? 
+BPHR has initiated transfer request for me, but I am unable to see it in my inbox in E-Transfer
+My transfer request has been approved by the Relieving Approver. The status shows, ‘Initiation: action required’. What does the status mean in E-Transfer
+Want to know my Relieving Manager, Relieving Approver, Accepting Approver, and Accepting Manager in E-Transfer
+To change the transfer status in E-Transfer
+To change the Base location after transfer in E-Transfer"
+FAQ-UTILITY	How to share desktop in Windows7.	"Solution : The steps given below needs to be followed to sahre desktop.
+Step 1. Type Remote Assistance in the search bar and the following window will open"
+FAQ-FACILITIES	What is the procedure if I want to bring my parents/family to the Campus? How can I avail for them to stay at the ECC?	Personal visitors are allowed to visit campus on during the weekends based on DC specific activity. In case you wish to get personal visitors please get in touch with the Security team at your DCs to sign a declaration
+FAQ-UTILITY	How to connect Infosys VPN	"Following are the step to connect VPN from your laptop.
+
+Check point VPN -1 Secure Client is installed on your laptop by default and you can see it on right bottom program tray of your laptop. If the icon is not coming there, then you can activate it from the programs option on start button"
+FAQ-FACILITIES	What is the process for deduction of the Gym fees?	The club membership fees will be deducted from the employee�s salary for that month. If the employee wishes to register for the health club, he/ she should do so through the Employee data sheet under Sparsh. In case the employee wishes to discontinue usage for whatever reasons, he/ she will be required to deregister through Employee data sheet under Sparsh and return the card on or before the 7th of the same month to avoid deductions in salary for the next month. The Billing cycle is from 15th of the present month to 16th of next month.
+FAQ-UTILITY	How to install Printer on my Machine	"To install printer, select the printer from the installation path (mentioned above) and double click it. It will be installed on your system.
+
+Note: You may get error that you don’t have permission to install printer on your system. Contact local CCD for it.
+
+ "
+L2-SOFTWARE	Please install image magick software	Ticket raised and assigned to ccd-softwares
+L2-ALLOCATION	Please provide a voip	Ticket raised and assigned to ccd-allocation
+L2-ALLOCATION	Please provide a desktop	Ticket raised and assigned to ccd-allocation
+L1-ACCESS	Please enable usb port	Port enabled please verify
+L1-ACCESS	Please provide admin access	Admin access provided 
+L1-FACILITIES	please provide a coffee cup	Please come and collect at faclities desk
+L1-FACILITIES	Please provide a pmu key	Please come and collect at faclities desk
