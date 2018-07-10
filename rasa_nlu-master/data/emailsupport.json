@@ -1,0 +1,210 @@
+﻿{
+  "rasa_nlu_data": {
+    "common_examples": [
+      {
+        "text": "Login Page is not getting displayed",
+        "intent": "faq_downtime",
+        "entities": [
+          {
+            "start": 0,
+            "end": 10,
+            "value": "Login Page",
+            "entity": "login"
+          }
+        ]
+      },
+      {
+        "text": "Login Page Down",
+        "intent": "faq_downtime",
+        "entities": [
+          {
+            "start": 0,
+            "end": 10,
+            "value": "Login Page",
+            "entity": "login"
+          },
+          {
+            "start": 11,
+            "end": 15,
+            "value": "Down",
+            "entity": "status"
+          },
+          {
+            "start": 11,
+            "end": 15,
+            "value": "Shutdown",
+            "entity": "status"
+          }
+        ]
+      },
+      {
+        "text": "Login Page not opening",
+        "intent": "faq_downtime",
+        "entities": [
+          {
+            "start": 0,
+            "end": 10,
+            "value": "Login Page",
+            "entity": "login"
+          }
+        ]
+      },
+      {
+        "text": "Login credentials are not working.",
+        "intent": "faq_logonIssue",
+        "entities": [
+          {
+            "start": 0,
+            "end": 17,
+            "value": "Login credentials",
+            "entity": "login"
+          }
+        ]
+      },
+      {
+        "text": "Forgot the password, can you please reset the password for me.",
+        "intent": "faq_logonIssue",
+        "entities": [
+          {
+            "start": 36,
+            "end": 54,
+            "value": "reset the password",
+            "entity": "change"
+          },
+          {
+            "start": 0,
+            "end": 19,
+            "value": "Forgot the password",
+            "entity": "change"
+          }
+        ]
+      },
+      {
+        "text": "Myspace Login Issue",
+        "intent": "faq_logonIssue",
+        "entities": [
+          {
+            "start": 8,
+            "end": 19,
+            "value": "Login Issue",
+            "entity": "problem"
+          },
+          {
+            "start": 0,
+            "end": 7,
+            "value": "Myspace",
+            "entity": "application"
+          },
+          {
+            "start": 0,
+            "end": 7,
+            "value": "Desktop",
+            "entity": "application"
+          },
+          {
+            "start": 0,
+            "end": 7,
+            "value": "LAN",
+            "entity": "application"
+          },
+          {
+            "start": 8,
+            "end": 19,
+            "value": "lan Issue",
+            "entity": "problem"
+          }
+        ]
+      },
+      {
+        "text": "Needs permission wifi access to laptop",
+        "intent": "faq_access",
+        "entities": [
+          {
+            "start": 17,
+            "end": 28,
+            "value": "wifi ",
+            "entity": "product"
+          },
+          {
+            "start": 32,
+            "end": 38,
+            "value": "laptop",
+            "entity": "device"
+          }
+        ]
+      },
+      {
+        "text": "Wifi access needed.",
+        "intent": "faq_access",
+        "entities": [
+          {
+            "start": 0,
+            "end": 4,
+            "value": "Wifi",
+            "entity": "product"
+          }
+        ]
+      },
+      {
+        "text": "Need to connect to Wifi.",
+        "intent": "faq_access",
+        "entities": [
+          {
+            "start": 19,
+            "end": 23,
+            "value": "Wifi",
+            "entity": "product"
+          }
+        ]
+      },
+      {
+        "text": "Unable to connect to Internet",
+        "intent": "faq_access",
+        "entities": [
+          {
+            "start": 21,
+            "end": 29,
+            "value": "Internet",
+            "entity": "device"
+          }
+        ]
+      },
+      {
+        "text": "How can I Delete Internet Cookies",
+        "intent": "faq_cleanup",
+        "entities": [
+          {
+            "start": 17,
+            "end": 33,
+            "value": "Internet Cookies",
+            "entity": "cache"
+          }
+        ]
+      },
+      {
+        "text": "Please delete google chrome cookies",
+        "intent": "faq_cleanup",
+        "entities": [
+          {
+            "start": 28,
+            "end": 35,
+            "value": "cookies",
+            "entity": "cache"
+          }
+        ]
+      },
+      {
+        "text": "How to delete Cookies",
+        "intent": "faq_cleanup",
+        "entities": [
+          {
+            "start": 14,
+            "end": 21,
+            "value": "Cookies",
+            "entity": "cache"
+          }
+        ]
+      }
+    ]
+  }
+}
