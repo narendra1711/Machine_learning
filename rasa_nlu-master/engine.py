@@ -1,23 +1,93 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jul 12 14:10:27 2018
 
-##dict of response for each type of intent
-intent_response_dict = {
-    "login": ["Login server was down. It is up now. Please check."],
-    "LogonIssue":["Go to URL : password.reset.com, Enter you login id, enter password received, reset the password"],
-    "Access":["First, connect a network cable to your laptop to the red port on your workstation. Run ipconfig /all on your command prompt. Share WiFi Mac or Hardware address to the IT team. IT team then adds your MAC ID to enable WiFi access","First, connect a network cable to your laptop to the red port on your workstation. Run ipconfig /all on your command prompt. Share WiFi Mac or Hardware address to the IT team. IT team then adds your MAC ID to enable WiFi access"],
-    "Cleanup":["Microsoft Internet Explorer users can go to 'Tools' (or the little cog icon in the top left), then go to 'Safety' and choose 'Delete browsing history...', you can then choose to delete your Internet cookies. In Google Chrome, go to 'More Tools' and choose 'Clear browsing data...'. Firefox users can go to 'History', then choose 'Clear recent history...'."],
-    "faqlink":['You can check all the answers here <a href="http://sparsh/faq-on-email-support.pdf</a>']
+@author: narendra_mugada
+"""
+faq_mfa_response_dict = {
+    "mfa_link": "MFA portal can be accessed @ https://rasssp.ad.infosys.com/MultiFactorAuth/  for registration. Use domain login credentials to login to the portal. Here, the user can activate MFA by registering their mobile number and personal PIN. There are 4 mandatory questions to be filled out to retrieve/change the PIN when forgotten. Also, you can set or change to a new PIN.",
 }
 
-def getFAQInfo(entities):
-    if entities == None:
-        return "Could not find out specific information about this ..." +  intent_response_dict["faq_link"]
-    if len(entities) == 1:
-        return intent_response_dict[entities[0]]
-    for ent in entities:
-        qtype = ent["type"]
-        qval = ent["entity"]
-        if qtype == "gst-query-value":
-            return intent_response_dict[qval]
+faq_password_response_dict = {
+    "password_link": "Please visit Sparsh (Webapps ? Account unlock / Password reset ? Registration) for a one-time registration for this facility or visit http://passaid."    
+}
 
-        return intent_response_dict[entities[0]]
-    return "Sorry.." + intent_response_dict["faq_link"]
+faq_accelerate_response_dict = {
+    "accelarate_link": "To apply the job click here - http://iscls4apps/accelerate/home , and then click on FAQ for further details.,For any queries please contact : ZeroBench.HydSTP@infosys.com"
+}
+
+faq_emergency_response_dict = {
+    "emergency_link": "Search for %Infosys Emergency% in Google Play Store and install the app.Complete the Multi-Factor authentication (MFA) process and activate your user profile"
+}
+
+faq_facilities_response_dict = {
+    "gym":"Kindly make a request under Sparsh-> Harmony->facilites and Services or drop a mail to Facilities_Hyderabad@infosys.com for any queries",
+    "membership card":"Kindly make a request under Sparsh-> Harmony->facilites and Services or drop a mail to Facilities_Hyderabad@infosys.com for any queries",
+    "guest house":"Kindly make a request under Sparsh-> Harmony->facilites and Services or drop a mail to Facilities_Hyderabad@infosys.com for any queries",
+    "member ship":"Kindly make a request under Sparsh-> Harmony->facilites and Services or drop a mail to Facilities_Hyderabad@infosys.com for any queries",
+    "2 wheeler":"Kindly make a request under Sparsh-> Harmony->facilites and Services or drop a mail to Facilities_Hyderabad@infosys.com for any queries",
+    "facility_link":"Please refer to www.sparsh.com/facilities"
+}
+
+faq_hr_response_dict = {
+    "hr_link": "Kindly raise your queries / concerns  with your Unit-HR or contact :Hyd_HRD_ER@infosys.com"
+}
+
+faq_cag_response_dict = {
+    "tax":"For any clarifications, please call the CAG Helpdesk or raise an AHD under Corporate Accounting Group(Loans & CLA)",
+    "salary advance": "For any clarifications, please call the CAG Helpdesk or raise an AHD under Corporate Accounting Group(Loans & CLA)",
+    "loan allowance": "For any clarifications, please call the CAG Helpdesk or raise an AHD under Corporate Accounting Group(Loans & CLA)",        
+    "soft loan": "For any clarifications, please call the CAG Helpdesk or raise an AHD under Corporate Accounting Group(Loans & CLA)",        
+    "salary loan": "For any clarifications, please call the CAG Helpdesk or raise an AHD under Corporate Accounting Group(Loans & CLA)",
+    "cag_link":"Please refer www.sparsh.com/cag"
+}
+
+def getMFAInfo(entities):
+    if len(entities) == 0:
+        return faq_mfa_response_dict["mfa_link"]
+    if len(entities) == 1:
+        return faq_mfa_response_dict[entities[0]['value']]
+    return "Sorry.." + faq_mfa_response_dict["mfa_link"]
+    
+def getPasswordInfo(entities):
+    if len(entities) == 0:
+        return faq_password_response_dict["password_link"]
+    if len(entities) == 1:
+        return faq_password_response_dict[entities[0]['value']]
+    return "Sorry.." + faq_password_response_dict["password_link"]    
+
+def getAccelarateInfo(entities):
+    if len(entities) == 0:
+        return faq_accelerate_response_dict["accelarate_link"]
+    if len(entities) == 1:
+        return faq_accelerate_response_dict[entities[0]['value']]
+    return "Sorry.." + faq_accelerate_response_dict["accelarate_link"]
+
+def getEmergencyInfo(entities):
+    if len(entities) == 0:
+        return faq_emergency_response_dict["emergency_link"]
+    if len(entities) == 1:
+        return faq_emergency_response_dict[entities[0]['value']]
+    return "Sorry.." + faq_emergency_response_dict["emergency_link"]
+
+def getFacilitiesInfo(entities):
+    if len(entities) == 0:
+        return faq_facilities_response_dict['facility_link']
+    if len(entities) == 1:
+        print("I'm here\n",entities)
+        return faq_facilities_response_dict[entities[0]['value']]
+    return "Sorry.." + faq_facilities_response_dict["facility_link"]
+
+def getHRInfo(entities):
+    if len(entities) == 0:
+        return faq_hr_response_dict['hr_link']
+    if len(entities) == 1:
+        return faq_hr_response_dict[entities[0]['value']]
+    return "Sorry.." + faq_hr_response_dict["hr_link"]
+
+def getCAGInfo(entities):
+    if len(entities) == 0:
+        return faq_cag_response_dict['cag_link']
+    if len(entities) == 1:
+        return faq_cag_response_dict[entities[0]['value']]
+    return "Sorry.." + faq_cag_response_dict["cag_link"]
