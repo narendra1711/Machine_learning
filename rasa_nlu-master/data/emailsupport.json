@@ -1,209 +1,230 @@
-﻿{
+{
   "rasa_nlu_data": {
     "common_examples": [
       {
-        "text": "Login Page is not getting displayed",
-        "intent": "faq_downtime",
+        "text": "could you please send me some information regarding accelerate .",
+        "intent": "FAQ-Accelerate",
+        "entities": []
+      },
+      {
+        "text": "i am on bench currently and looking forward to work on accelerate , can you help",
+        "intent": "FAQ-Accelerate",
+        "entities": []
+      },
+      {
+        "text": "how to apply for an accelerate task",
+        "intent": "FAQ-Accelerate",
+        "entities": []
+      },
+      {
+        "text": "what is the process for creating a accelerate task",
+        "intent": "FAQ-Accelerate",
+        "entities": []
+      },
+      {
+        "text": "share some information about accelerate",
+        "intent": "FAQ-Accelerate",
+        "entities": []
+      },
+      {
+        "text": "i had some query regarding tax certificate , kindly help",
+        "intent": "FAQ-CAG",
         "entities": [
           {
-            "start": 0,
-            "end": 10,
-            "value": "Login Page",
-            "entity": "login"
+            "start": 27,
+            "end": 42,
+            "value": "tax certificate",
+            "entity": "type"
           }
         ]
       },
       {
-        "text": "Login Page Down",
-        "intent": "faq_downtime",
-        "entities": [
-          {
-            "start": 0,
-            "end": 10,
-            "value": "Login Page",
-            "entity": "login"
-          },
-          {
-            "start": 11,
-            "end": 15,
-            "value": "Down",
-            "entity": "status"
-          },
-          {
-            "start": 11,
-            "end": 15,
-            "value": "Shutdown",
-            "entity": "status"
-          }
-        ]
-      },
-      {
-        "text": "Login Page not opening",
-        "intent": "faq_downtime",
-        "entities": [
-          {
-            "start": 0,
-            "end": 10,
-            "value": "Login Page",
-            "entity": "login"
-          }
-        ]
-      },
-      {
-        "text": "Login credentials are not working.",
-        "intent": "faq_logonIssue",
-        "entities": [
-          {
-            "start": 0,
-            "end": 17,
-            "value": "Login credentials",
-            "entity": "login"
-          }
-        ]
-      },
-      {
-        "text": "Forgot the password, can you please reset the password for me.",
-        "intent": "faq_logonIssue",
+        "text": "what is the procedure for getting a salary advance",
+        "intent": "FAQ-CAG",
         "entities": [
           {
             "start": 36,
-            "end": 54,
-            "value": "reset the password",
-            "entity": "change"
-          },
-          {
-            "start": 0,
-            "end": 19,
-            "value": "Forgot the password",
-            "entity": "change"
+            "end": 50,
+            "value": "salary advance",
+            "entity": "type"
           }
         ]
       },
       {
-        "text": "Myspace Login Issue",
-        "intent": "faq_logonIssue",
+        "text": "needed some help regarding housing loan allowance",
+        "intent": "FAQ-CAG",
         "entities": [
           {
-            "start": 8,
-            "end": 19,
-            "value": "Login Issue",
-            "entity": "problem"
-          },
-          {
-            "start": 0,
-            "end": 7,
-            "value": "Myspace",
-            "entity": "application"
-          },
-          {
-            "start": 0,
-            "end": 7,
-            "value": "Desktop",
-            "entity": "application"
-          },
-          {
-            "start": 0,
-            "end": 7,
-            "value": "LAN",
-            "entity": "application"
-          },
-          {
-            "start": 8,
-            "end": 19,
-            "value": "lan Issue",
-            "entity": "problem"
+            "start": 26,
+            "end": 39,
+            "value": " housing loan",
+            "entity": "type"
           }
         ]
       },
       {
-        "text": "Needs permission wifi access to laptop",
-        "intent": "faq_access",
+        "text": "how to get a soft loan",
+        "intent": "FAQ-CAG",
         "entities": [
           {
-            "start": 17,
-            "end": 28,
-            "value": "wifi ",
-            "entity": "product"
-          },
+            "start": 13,
+            "end": 22,
+            "value": "soft loan",
+            "entity": "type"
+          }
+        ]
+      },
+      {
+        "text": "can you send me soft loan information ?",
+        "intent": "FAQ-CAG",
+        "entities": [
           {
-            "start": 32,
+            "start": 16,
+            "end": 25,
+            "value": "soft loan",
+            "entity": "type"
+          }
+        ]
+      },
+      {
+        "text": "can you tell me about salary loan ?",
+        "intent": "FAQ-CAG",
+        "entities": [
+          {
+            "start": 22,
+            "end": 33,
+            "value": "salary loan",
+            "entity": "type"
+          }
+        ]
+      },
+      {
+        "text": "how infosys emergency app works",
+        "intent": "FAQ-Emergency",
+        "entities": []
+      },
+      {
+        "text": "please tell me some information about infosys emergency application",
+        "intent": "FAQ-Emergency",
+        "entities": []
+      },
+      {
+        "text": "if i am stuck in an emergency situation , what to do",
+        "intent": "FAQ-Emergency",
+        "entities": []
+      },
+      {
+        "text": "what is the procedure to access emergency app",
+        "intent": "FAQ-Emergency",
+        "entities": []
+      },
+      {
+        "text": "tell me something about the infosys emergency app",
+        "intent": "FAQ-Emergency",
+        "entities": []
+      },
+      {
+        "text": "i want membership for gym , can you explain the procedure",
+        "intent": "FAQ-Facilities",
+        "entities": [
+          {
+            "start": 22,
+            "end": 25,
+            "value": "gym",
+            "entity": "activity"
+          }
+        ]
+      },
+      {
+        "text": "i have lost my facility membership card , plz help",
+        "intent": "FAQ-Facilities",
+        "entities": [
+          {
+            "start": 24,
+            "end": 39,
+            "value": "membership card",
+            "entity": "category"
+          }
+        ]
+      },
+      {
+        "text": "i was looking to book the official guest house , can you tell me the procudure",
+        "intent": "FAQ-Facilities",
+        "entities": [
+          {
+            "start": 35,
+            "end": 46,
+            "value": "guest house",
+            "entity": "category"
+          }
+        ]
+      },
+      {
+        "text": "what are charges for facility member ship card",
+        "intent": "FAQ-Facilities",
+        "entities": [
+          {
+            "start": 30,
+            "end": 46,
+            "value": "member ship card",
+            "entity": "category"
+          }
+        ]
+      },
+      {
+        "text": "i had a query regarding mlpl 2 wheeler parking , whom to contact",
+        "intent": "FAQ-Facilities",
+        "entities": [
+          {
+            "start": 29,
             "end": 38,
-            "value": "laptop",
-            "entity": "device"
-          }
-        ]
-      },
-      {
-        "text": "Wifi access needed.",
-        "intent": "faq_access",
-        "entities": [
+            "value": "2 wheeler",
+            "entity": "vehicle"
+          },
           {
-            "start": 0,
-            "end": 4,
-            "value": "Wifi",
-            "entity": "product"
+            "start": 29,
+            "end": 38,
+            "value": "3 wheeler",
+            "entity": "vehicle"
           }
         ]
       },
       {
-        "text": "Need to connect to Wifi.",
-        "intent": "faq_access",
-        "entities": [
-          {
-            "start": 19,
-            "end": 23,
-            "value": "Wifi",
-            "entity": "product"
-          }
-        ]
-      },
-      {
-        "text": "Unable to connect to Internet",
-        "intent": "faq_access",
+        "text": "how do i deacvtivate gym membership card",
+        "intent": "FAQ-Facilities",
         "entities": [
           {
             "start": 21,
-            "end": 29,
-            "value": "Internet",
-            "entity": "device"
+            "end": 24,
+            "value": "gym",
+            "entity": "activity"
           }
         ]
       },
       {
-        "text": "How can I Delete Internet Cookies",
-        "intent": "faq_cleanup",
-        "entities": [
-          {
-            "start": 17,
-            "end": 33,
-            "value": "Internet Cookies",
-            "entity": "cache"
-          }
-        ]
+        "text": "how to register for mfa",
+        "intent": "FAQ-MFA",
+        "entities": []
       },
       {
-        "text": "Please delete google chrome cookies",
-        "intent": "faq_cleanup",
-        "entities": [
-          {
-            "start": 28,
-            "end": 35,
-            "value": "cookies",
-            "entity": "cache"
-          }
-        ]
+        "text": "tell me the procedure for mfa",
+        "intent": "FAQ-MFA",
+        "entities": []
       },
       {
-        "text": "How to delete Cookies",
-        "intent": "faq_cleanup",
-        "entities": [
-          {
-            "start": 14,
-            "end": 21,
-            "value": "Cookies",
-            "entity": "cache"
-          }
-        ]
+        "text": "unable to access mfa , please help",
+        "intent": "FAQ-MFA",
+        "entities": []
+      },
+      {
+        "text": "let me know how i can know about mfa",
+        "intent": "FAQ-MFA",
+        "entities": []
+      },
+      {
+        "text": "please send me the entire process for mfa",
+        "intent": "FAQ-MFA",
+        "entities": []
       }
     ]
   }
